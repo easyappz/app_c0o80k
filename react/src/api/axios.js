@@ -7,7 +7,7 @@ import axios from 'axios';
  */
 export const instance = axios.create({
   timeout: 30000,
-  baseURL: '/',
+  baseURL: 'https://app_c0o80k.easyappz.ru/',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
