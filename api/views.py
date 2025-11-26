@@ -158,6 +158,9 @@ class UserDetailView(APIView):
     """
     GET /api/users/{id}/
     Get user profile by ID
+    
+    PUT /api/users/{id}/
+    Update user profile (only own profile)
     """
     permission_classes = [IsAuthenticated]
 
@@ -191,14 +194,6 @@ class UserDetailView(APIView):
 
         return Response(data, status=status.HTTP_200_OK)
 
-
-class UserUpdateView(APIView):
-    """
-    PUT /api/users/{id}/
-    Update user profile (only own profile)
-    """
-    permission_classes = [IsAuthenticated]
-
     def put(self, request, id):
         user = get_object_or_404(Member, id=id)
 
@@ -219,6 +214,9 @@ class PostListView(APIView):
     """
     GET /api/posts/
     Get news feed (posts from friends and own posts)
+    
+    POST /api/posts/
+    Create a new post
     """
     permission_classes = [IsAuthenticated]
 
@@ -238,14 +236,6 @@ class PostListView(APIView):
         serializer = PostSerializer(posts, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-class PostCreateView(APIView):
-    """
-    POST /api/posts/
-    Create a new post
-    """
-    permission_classes = [IsAuthenticated]
-
     def post(self, request):
         serializer = PostCreateSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
@@ -261,6 +251,9 @@ class PostDetailView(APIView):
     """
     GET /api/posts/{id}/
     Get post by ID
+    
+    DELETE /api/posts/{id}/
+    Delete own post
     """
     permission_classes = [IsAuthenticated]
 
@@ -268,14 +261,6 @@ class PostDetailView(APIView):
         post = get_object_or_404(Post, id=id)
         serializer = PostSerializer(post, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class PostDeleteView(APIView):
-    """
-    DELETE /api/posts/{id}/
-    Delete own post
-    """
-    permission_classes = [IsAuthenticated]
 
     def delete(self, request, id):
         post = get_object_or_404(Post, id=id)
@@ -308,6 +293,9 @@ class CommentListView(APIView):
     """
     GET /api/posts/{post_id}/comments/
     Get all comments for a post
+    
+    POST /api/posts/{post_id}/comments/
+    Add a comment to a post
     """
     permission_classes = [IsAuthenticated]
 
@@ -316,14 +304,6 @@ class CommentListView(APIView):
         comments = Comment.objects.filter(post=post).order_by('created_at')
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class CommentCreateView(APIView):
-    """
-    POST /api/posts/{post_id}/comments/
-    Add a comment to a post
-    """
-    permission_classes = [IsAuthenticated]
 
     def post(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)

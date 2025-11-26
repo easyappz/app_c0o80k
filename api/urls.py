@@ -35,21 +35,17 @@ urlpatterns = [
     path("auth/logout/", LogoutView.as_view(), name="logout"),
     path("auth/me/", MeView.as_view(), name="me"),
 
-    # Users endpoints
+    # Users endpoints - list and detail
     path("users/", UserListView.as_view(), name="users-list"),
     path("users/<int:id>/", UserDetailView.as_view(), name="user-detail"),
-    path("users/<int:id>/", UserUpdateView.as_view(), name="user-update"),
 
-    # Posts endpoints
+    # Posts endpoints - combined list/create and detail/delete
     path("posts/", PostListView.as_view(), name="posts-list"),
-    path("posts/", PostCreateView.as_view(), name="post-create"),
     path("posts/<int:id>/", PostDetailView.as_view(), name="post-detail"),
-    path("posts/<int:id>/", PostDeleteView.as_view(), name="post-delete"),
     path("users/<int:user_id>/posts/", UserPostsView.as_view(), name="user-posts"),
 
-    # Comments endpoints
+    # Comments endpoints - combined list/create
     path("posts/<int:post_id>/comments/", CommentListView.as_view(), name="comments-list"),
-    path("posts/<int:post_id>/comments/", CommentCreateView.as_view(), name="comment-create"),
     path("comments/<int:id>/", CommentDeleteView.as_view(), name="comment-delete"),
 
     # Likes endpoints
