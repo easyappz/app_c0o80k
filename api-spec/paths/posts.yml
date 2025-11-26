@@ -1,0 +1,285 @@
+postsList:
+  get:
+    summary: Get news feed
+    description: Get posts from friends and own posts
+    tags:
+      - Posts
+    x-isSecure: true
+    responses:
+      '200':
+        description: News feed posts
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      avatar_url:
+                        type: string
+                        nullable: true
+                  content:
+                    type: string
+                  likes_count:
+                    type: integer
+                  comments_count:
+                    type: integer
+                  is_liked:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+  post:
+    summary: Create post
+    description: Create a new post
+    tags:
+      - Posts
+    x-isSecure: true
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+            required:
+              - content
+    responses:
+      '201':
+        description: Post created successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                author:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                content:
+                  type: string
+                likes_count:
+                  type: integer
+                comments_count:
+                  type: integer
+                is_liked:
+                  type: boolean
+                created_at:
+                  type: string
+                  format: date-time
+                updated_at:
+                  type: string
+                  format: date-time
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+postDetail:
+  get:
+    summary: Get post
+    description: Get single post by ID
+    tags:
+      - Posts
+    x-isSecure: true
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: Post data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                author:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                content:
+                  type: string
+                likes_count:
+                  type: integer
+                comments_count:
+                  type: integer
+                is_liked:
+                  type: boolean
+                created_at:
+                  type: string
+                  format: date-time
+                updated_at:
+                  type: string
+                  format: date-time
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: Post not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+  delete:
+    summary: Delete post
+    description: Delete own post
+    tags:
+      - Posts
+    x-isSecure: true
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '204':
+        description: Post deleted successfully
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '403':
+        description: Forbidden - can only delete own posts
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: Post not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+userPosts:
+  get:
+    summary: Get user posts
+    description: Get all posts by specific user
+    tags:
+      - Posts
+    x-isSecure: true
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: User posts
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      avatar_url:
+                        type: string
+                        nullable: true
+                  content:
+                    type: string
+                  likes_count:
+                    type: integer
+                  comments_count:
+                    type: integer
+                  is_liked:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'

@@ -1,0 +1,39 @@
+toggleLike:
+  post:
+    summary: Toggle like on post
+    description: Like or unlike a post (toggle)
+    tags:
+      - Likes
+    x-isSecure: true
+    parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: Like toggled successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_liked:
+                  type: boolean
+                  description: Current like status after toggle
+                likes_count:
+                  type: integer
+                  description: Total number of likes on the post
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: Post not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'

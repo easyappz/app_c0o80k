@@ -1,0 +1,224 @@
+conversationsList:
+  get:
+    summary: Get conversations list
+    description: Get list of all conversations with other users
+    tags:
+      - Messages
+    x-isSecure: true
+    responses:
+      '200':
+        description: Conversations list
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      avatar_url:
+                        type: string
+                        nullable: true
+                  last_message:
+                    type: object
+                    nullable: true
+                    properties:
+                      id:
+                        type: integer
+                      sender:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          username:
+                            type: string
+                      recipient:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          username:
+                            type: string
+                      content:
+                        type: string
+                      is_read:
+                        type: boolean
+                      created_at:
+                        type: string
+                        format: date-time
+                  unread_count:
+                    type: integer
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+conversationDetail:
+  get:
+    summary: Get conversation messages
+    description: Get all messages in conversation with a specific user
+    tags:
+      - Messages
+    x-isSecure: true
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: Conversation messages
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  sender:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      avatar_url:
+                        type: string
+                        nullable: true
+                  recipient:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      avatar_url:
+                        type: string
+                        nullable: true
+                  content:
+                    type: string
+                  is_read:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: date-time
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+sendMessage:
+  post:
+    summary: Send message
+    description: Send a message to another user
+    tags:
+      - Messages
+    x-isSecure: true
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              recipient_id:
+                type: integer
+              content:
+                type: string
+            required:
+              - recipient_id
+              - content
+    responses:
+      '201':
+        description: Message sent successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                sender:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                recipient:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                content:
+                  type: string
+                is_read:
+                  type: boolean
+                created_at:
+                  type: string
+                  format: date-time
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: Recipient not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'

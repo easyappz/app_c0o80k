@@ -1,0 +1,419 @@
+friendsList:
+  get:
+    summary: Get friends list
+    description: Get list of current user's friends
+    tags:
+      - Friends
+    x-isSecure: true
+    responses:
+      '200':
+        description: Friends list
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  first_name:
+                    type: string
+                  last_name:
+                    type: string
+                  bio:
+                    type: string
+                    nullable: true
+                  avatar_url:
+                    type: string
+                    nullable: true
+                  created_at:
+                    type: string
+                    format: date-time
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+friendRequests:
+  get:
+    summary: Get incoming friend requests
+    description: Get list of incoming friend requests
+    tags:
+      - Friends
+    x-isSecure: true
+    responses:
+      '200':
+        description: Incoming friend requests
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  from_user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      avatar_url:
+                        type: string
+                        nullable: true
+                  to_user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      avatar_url:
+                        type: string
+                        nullable: true
+                  status:
+                    type: string
+                    enum: [pending]
+                  created_at:
+                    type: string
+                    format: date-time
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+friendSent:
+  get:
+    summary: Get sent friend requests
+    description: Get list of sent friend requests
+    tags:
+      - Friends
+    x-isSecure: true
+    responses:
+      '200':
+        description: Sent friend requests
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  from_user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      avatar_url:
+                        type: string
+                        nullable: true
+                  to_user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      avatar_url:
+                        type: string
+                        nullable: true
+                  status:
+                    type: string
+                    enum: [pending]
+                  created_at:
+                    type: string
+                    format: date-time
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+sendRequest:
+  post:
+    summary: Send friend request
+    description: Send a friend request to a user
+    tags:
+      - Friends
+    x-isSecure: true
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '201':
+        description: Friend request sent successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                from_user:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                to_user:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                status:
+                  type: string
+                  enum: [pending]
+                created_at:
+                  type: string
+                  format: date-time
+      '400':
+        description: Bad request - already friends or request exists
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+acceptRequest:
+  post:
+    summary: Accept friend request
+    description: Accept an incoming friend request
+    tags:
+      - Friends
+    x-isSecure: true
+    parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: Friend request accepted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                from_user:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                to_user:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                status:
+                  type: string
+                  enum: [accepted]
+                created_at:
+                  type: string
+                  format: date-time
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '403':
+        description: Forbidden - not the recipient of this request
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: Friend request not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+rejectRequest:
+  post:
+    summary: Reject friend request
+    description: Reject an incoming friend request
+    tags:
+      - Friends
+    x-isSecure: true
+    parameters:
+      - name: request_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: Friend request rejected
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                from_user:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                to_user:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                status:
+                  type: string
+                  enum: [rejected]
+                created_at:
+                  type: string
+                  format: date-time
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '403':
+        description: Forbidden - not the recipient of this request
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: Friend request not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+removeFriend:
+  delete:
+    summary: Remove friend
+    description: Remove a user from friends list
+    tags:
+      - Friends
+    x-isSecure: true
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '204':
+        description: Friend removed successfully
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: Friendship not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'

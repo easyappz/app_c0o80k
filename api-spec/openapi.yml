@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: Social Network API
+  version: 1.0.0
+  description: API for a minimal social network application
+
+servers:
+  - url: http://localhost:8000
+    description: Development server
+
+paths:
+  # Auth endpoints
+  /api/auth/register/:
+    $ref: './paths/auth.yml#/register'
+  /api/auth/login/:
+    $ref: './paths/auth.yml#/login'
+  /api/auth/logout/:
+    $ref: './paths/auth.yml#/logout'
+  /api/auth/me/:
+    $ref: './paths/auth.yml#/me'
+
+  # Users endpoints
+  /api/users/:
+    $ref: './paths/users.yml#/usersList'
+  /api/users/{id}/:
+    $ref: './paths/users.yml#/userDetail'
+
+  # Posts endpoints
+  /api/posts/:
+    $ref: './paths/posts.yml#/postsList'
+  /api/posts/{id}/:
+    $ref: './paths/posts.yml#/postDetail'
+  /api/users/{user_id}/posts/:
+    $ref: './paths/posts.yml#/userPosts'
+
+  # Comments endpoints
+  /api/posts/{post_id}/comments/:
+    $ref: './paths/comments.yml#/commentsList'
+  /api/comments/{id}/:
+    $ref: './paths/comments.yml#/commentDelete'
+
+  # Likes endpoints
+  /api/posts/{post_id}/like/:
+    $ref: './paths/likes.yml#/toggleLike'
+
+  # Friends endpoints
+  /api/friends/:
+    $ref: './paths/friends.yml#/friendsList'
+  /api/friends/requests/:
+    $ref: './paths/friends.yml#/friendRequests'
+  /api/friends/sent/:
+    $ref: './paths/friends.yml#/friendSent'
+  /api/friends/request/{user_id}/:
+    $ref: './paths/friends.yml#/sendRequest'
+  /api/friends/accept/{request_id}/:
+    $ref: './paths/friends.yml#/acceptRequest'
+  /api/friends/reject/{request_id}/:
+    $ref: './paths/friends.yml#/rejectRequest'
+  /api/friends/{user_id}/:
+    $ref: './paths/friends.yml#/removeFriend'
+
+  # Messages endpoints
+  /api/conversations/:
+    $ref: './paths/messages.yml#/conversationsList'
+  /api/conversations/{user_id}/:
+    $ref: './paths/messages.yml#/conversationDetail'
+  /api/messages/:
+    $ref: './paths/messages.yml#/sendMessage'
+
+components:
+  schemas:
+    Member:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        bio:
+          type: string
+          nullable: true
+        avatar_url:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - username
+        - email
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        author:
+          $ref: '#/components/schemas/Member'
+        content:
+          type: string
+        likes_count:
+          type: integer
+          readOnly: true
+        comments_count:
+          type: integer
+          readOnly: true
+        is_liked:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - content
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        post_id:
+          type: integer
+          readOnly: true
+        author:
+          $ref: '#/components/schemas/Member'
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - content
+
+    FriendRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        from_user:
+          $ref: '#/components/schemas/Member'
+        to_user:
+          $ref: '#/components/schemas/Member'
+        status:
+          type: string
+          enum: [pending, accepted, rejected]
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        sender:
+          $ref: '#/components/schemas/Member'
+        recipient:
+          $ref: '#/components/schemas/Member'
+        content:
+          type: string
+        is_read:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - content
+
+    Conversation:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/Member'
+        last_message:
+          $ref: '#/components/schemas/Message'
+        unread_count:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        detail:
+          type: string

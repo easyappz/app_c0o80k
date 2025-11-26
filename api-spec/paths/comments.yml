@@ -1,0 +1,166 @@
+commentsList:
+  get:
+    summary: Get post comments
+    description: Get all comments for a specific post
+    tags:
+      - Comments
+    x-isSecure: true
+    parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: Comments list
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  post_id:
+                    type: integer
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      avatar_url:
+                        type: string
+                        nullable: true
+                  content:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: Post not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+  post:
+    summary: Add comment
+    description: Add a comment to a post
+    tags:
+      - Comments
+    x-isSecure: true
+    parameters:
+      - name: post_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+            required:
+              - content
+    responses:
+      '201':
+        description: Comment created successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                post_id:
+                  type: integer
+                author:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    avatar_url:
+                      type: string
+                      nullable: true
+                content:
+                  type: string
+                created_at:
+                  type: string
+                  format: date-time
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: Post not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+
+commentDelete:
+  delete:
+    summary: Delete comment
+    description: Delete own comment
+    tags:
+      - Comments
+    x-isSecure: true
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    responses:
+      '204':
+        description: Comment deleted successfully
+      '401':
+        description: Not authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '403':
+        description: Forbidden - can only delete own comments
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
+      '404':
+        description: Comment not found
+        content:
+          application/json:
+            schema:
+              $ref: '../openapi.yml#/components/schemas/Error'
