@@ -16,6 +16,6 @@ export const deletePost = async (postId) => {
 };
 
 export const getUserPosts = async (userId) => {
-  const response = await axios.get(`/api/posts/user/${userId}/`);
+  const response = await axios.get(`/api/users/${userId}/posts/`);
   return response.data;
 };
